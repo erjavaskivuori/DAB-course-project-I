@@ -16,6 +16,7 @@ const handleGetAssignments = async ( request ) => {
 };
 
 const handlePostAssignment = async ( request ) => {
+  const programmingAssignments = await cachedProgrammingAssignmentService.findAll();
   const requestData = await request.json();
   const testCode = programmingAssignments[0]["test_code"];
   const data = {
