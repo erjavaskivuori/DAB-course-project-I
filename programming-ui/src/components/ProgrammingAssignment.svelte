@@ -4,7 +4,6 @@
 
   let editorValue = "";
   let lineNumbers = [];
-  let value = "";
   let id = 1;
 
   const getAssignments = async () => {
@@ -60,5 +59,4 @@
     {/if}
   {/await}
   </div>
-
 </div>
