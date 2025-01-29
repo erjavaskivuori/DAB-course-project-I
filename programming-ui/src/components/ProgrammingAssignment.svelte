@@ -50,6 +50,7 @@
   };
 
   const fetchData = async () => {
+    editorValue = "";
     assignments = await getAssignments();
     solvedAssignments = await getSolvedAssignments();
     console.log(assignments);

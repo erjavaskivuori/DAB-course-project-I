@@ -62,6 +62,7 @@
   };
 
   const moveToNextAssignment = async () => {
+    gradingResult = null;
     await updateAssignments();
   };
 </script>
