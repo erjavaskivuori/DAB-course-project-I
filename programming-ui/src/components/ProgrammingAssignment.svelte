@@ -8,6 +8,7 @@
   import { get } from "svelte/store";
   import GradingButton from "./GradingButton.svelte";
   import CodeEditor from "./CodeEditor.svelte"
+  import ProgressBar from "./ProgressBar.svelte"
   import { userUuid } from "../stores/stores.js";
 
   let editorValue = "";
@@ -46,6 +47,8 @@
       if (!assignmentSolved) {
         nextAssignment = assignment;
         break;
+      } else {
+        nextAssignment = null;
       }
     }
   };
@@ -67,23 +70,25 @@
   setContext("updateAssignments", fetchData);
 </script>
 
-<div class="w-screen h-full bg-gray-900 text-white">
-  <div class="mx-7">
-    <h1>Programming assignments</h1>
-
-    {#if loading}
-      <p>Loading assignments...</p>
-    {:else}
-      {#if nextAssignment}
-        <ul>
-          <h1 class="text-3xl font-bold pb-6 mt-3">Assignment {nextAssignment.assignment_order}: {nextAssignment.title}</h1>
-          <p class="text-lg pb-8">{nextAssignment.handout}</p>
-          <CodeEditor bind:lineNumbers bind:editorValue />
-          <GradingButton {editorValue} {nextAssignment} />
-        </ul>
+<div class="flex w-full h-full flex-col items-center justify-center bg-gray-900 text-white">
+  <div class="text-white">
+    <div class="mx-7">
+      <h1 class="text-4xl font-bold">Programming assignments</h1>
+      <ProgressBar {solvedAssignments} {assignments} />
+      {#if loading}
+        <p>Loading assignments...</p>
       {:else}
-        <p>No unsolved assignments available</p>
+        {#if nextAssignment}
+          <ul>
+            <h1 class="text-3xl font-bold my-4">Assignment {nextAssignment.assignment_order}: {nextAssignment.title}</h1>
+            <p class="text-lg mb-8">{nextAssignment.handout}</p>
+            <CodeEditor bind:lineNumbers bind:editorValue />
+            <GradingButton {editorValue} {nextAssignment} />
+          </ul>
+        {:else}
+          <p class="min-h-screen">No unsolved assignments available</p>
+        {/if}
       {/if}
-    {/if}
+    </div>
   </div>
 </div>
