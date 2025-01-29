@@ -48,7 +48,6 @@ const handleGetAssignments = async ( request ) => {
 const handleGetSolvedAssignments = async (request) => {
   const searchParams = new URL(request.url).searchParams;
   const solvedAssignments = await programmingAssignmentService.findSolvedAssignments(searchParams.get("user"))
-  console.log(solvedAssignments);
   return Response.json(solvedAssignments);
 };
 
@@ -63,14 +62,28 @@ const handlePostAssignment = async ( request ) => {
     code: requestData.code,
   };
 
-  const submission = await cachedProgrammingAssignmentService.addSubmission(
+  const previousSubmissions = await programmingAssignmentService.findByUserIdAndassignmentId(
+    data.userId,
+    data.assignmentId
+  );
+
+  for (let i = 0; i < previousSubmissions.length; i++) {
+    if (previousSubmissions[i].code === data.code) {
+      const feedbackData = {
+        correct: previousSubmissions[i].correct,
+        feedback: JSON.parse(previousSubmissions[i].grader_feedback),
+        status: previousSubmissions[i].status,
+      };
+      return new Response(JSON.stringify(feedbackData), {
+        headers: { "Content-Type": "application/json" },
+      });
+    };
+  };
+
+  const submission = await programmingAssignmentService.addSubmission(
     data.assignmentId,
     data.code,
-    data.userId,
-    "pending",
-    "",
-    false,
-    new Date().toISOString()
+    data.userId
   );
 
   await redis.xadd(

@@ -40,22 +40,23 @@
       },
       body: JSON.stringify(data),
       });
-
       gradingResult = await gradeResponse.json();
       submissionId = gradingResult.id;
     }
 
-    do {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      const submissionResponse = await fetch("/api/submission", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: submissionId }),
-      });
-      gradingResult = await submissionResponse.json();
-    } while (gradingResult.status === "pending");
+    if (gradingResult.status === "pending") {
+      do {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        const submissionResponse = await fetch("/api/submission", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: submissionId }),
+        });
+        gradingResult = await submissionResponse.json();
+      } while (gradingResult.status === "pending");
+    };
 
     pending = false;
     submissionId = null;
