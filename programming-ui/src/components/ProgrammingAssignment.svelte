@@ -7,6 +7,7 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import GradingButton from "./GradingButton.svelte";
+  import CodeEditor from "./CodeEditor.svelte"
   import { userUuid } from "../stores/stores.js";
 
   let editorValue = "";
@@ -59,19 +60,8 @@
     loading = false;
   };
 
-  const handleEditorChange = (event) => {
-    editorValue = event.target.value;
-    updateLineNumbers();
-  };
-
-  const updateLineNumbers = () => {
-    const lines = editorValue.split("\n").length;
-    lineNumbers = Array.from({ length: lines }, (_, i) => i + 1);
-  };
-
   onMount(() => {
     fetchData();
-    updateLineNumbers();
   });
 
   setContext("updateAssignments", fetchData);
@@ -88,19 +78,7 @@
         <ul>
           <h1 class="text-3xl font-bold pb-6 mt-3">Assignment {nextAssignment.assignment_order}: {nextAssignment.title}</h1>
           <p class="text-lg pb-8">{nextAssignment.handout}</p>
-          <div class="flex mt-4">
-            <div class="bg-gray-800 text-gray-400 p-2 text-right">
-              {#each lineNumbers as lineNumber}
-                <div>{lineNumber}</div>
-              {/each}
-            </div>
-            <textarea
-              bind:value={editorValue}
-              on:input={handleEditorChange}
-              class="bg-gray-800 text-white p-2 w-full mr-8 h-64 resize-none focus:outline-none"
-              placeholder="Enter your code here..."
-            ></textarea>
-          </div>
+          <CodeEditor bind:lineNumbers bind:editorValue />
           <GradingButton {editorValue} {nextAssignment} />
         </ul>
       {:else}
