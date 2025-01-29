@@ -39,7 +39,6 @@
       let assignmentSolved = false;
       for (let i = 0; i < solvedAssignments.length; i++) {
         if (assignment.id === solvedAssignments[i].programming_assignment_id) {
-          console.log("Assignment " + assignment.id + " is already solved");
           assignmentSolved = true;
           break;
         }
@@ -57,8 +56,6 @@
     editorValue = "";
     assignments = await getAssignments();
     solvedAssignments = await getSolvedAssignments();
-    console.log(assignments);
-    console.log(solvedAssignments);
     determineNextUnsolvedAssignment();
     loading = false;
   };
