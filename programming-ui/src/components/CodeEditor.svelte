@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   export let lineNumbers;
   export let editorValue;
 
@@ -11,6 +12,9 @@
     const lines = editorValue.split("\n").length;
     lineNumbers = Array.from({ length: lines }, (_, i) => i + 1);
   };
+  onMount(() => {
+    updateLineNumbers();
+  })
 </script>
 
 <div class="flex mt-4">
