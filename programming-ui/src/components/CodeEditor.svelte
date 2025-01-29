@@ -26,7 +26,7 @@
   <textarea
     bind:value={editorValue}
     on:input={handleEditorChange}
-    class="bg-gray-800 text-white p-2 w-full mr-8 h-64 resize-none focus:outline-none"
+    class="bg-gray-800 text-white p-2 w-full h-64 resize-none focus:outline-none"
     placeholder="Enter your code here..."
   ></textarea>
 </div>

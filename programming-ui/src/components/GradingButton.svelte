@@ -67,8 +67,7 @@
   };
 </script>
 
-<div class="w-screen min-h-screen bg-gray-900">
-  <div class="mx-2">
+<div class="min-h-screen bg-gray-900">
     <button
       class="font-bold p-4 rounded my-10 text-white"
       class:bg-blue-500={!pending}
@@ -117,5 +116,4 @@
         </div>
       {/if}
     {/if}
-  </div>
 </div>
