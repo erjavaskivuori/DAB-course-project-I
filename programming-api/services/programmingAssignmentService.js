@@ -23,6 +23,14 @@ const findBySubmissionId = async (submissionId) => {
     FROM programming_assignment_submissions
     WHERE id = ${submissionId};
   `;
-}
+};
 
-export { findAll, addSubmission, updateSubmission, findBySubmissionId };
+const findSolvedAssignments = async (userId) => {
+  return await sql`
+    SELECT programming_assignment_id
+    FROM programming_assignment_submissions
+    WHERE user_uuid = ${userId} AND correct = true;
+  `;
+};
+
+export { findAll, addSubmission, updateSubmission, findBySubmissionId, findSolvedAssignments };

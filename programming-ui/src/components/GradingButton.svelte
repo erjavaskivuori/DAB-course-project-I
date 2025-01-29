@@ -1,17 +1,20 @@
 <script>
+  import { getContext } from "svelte";
   import { userUuid } from "../stores/stores.js";
-  export let editorValue = "";
-  export let assignmentId = 1;
+  export let editorValue;
+  export let nextAssignment;
   let submissionId = null;
   let gradingResult = null;
   let pending = false;
+
+  const updateAssignments = getContext("updateAssignments");
 
   const submitToGrading = async () => {
     pending = true;
     gradingResult = null;
 
     const data = {
-      assignment: assignmentId,
+      assignment: nextAssignment.id,
       user: $userUuid,
       code: editorValue,
     };
@@ -57,6 +60,10 @@
     pending = false;
     submissionId = null;
   };
+
+  const moveToNextAssignment = async () => {
+    await updateAssignments();
+  };
 </script>
 
 <div class="w-screen min-h-screen bg-gray-900">
@@ -79,6 +86,12 @@
   {#if gradingResult && !pending}
     {#if gradingResult.correct}
       <p class="text-green-500">Your submission is correct!</p>
+      <button
+        class="bg-green-500 hover:bg-green-700 text-white font-bold p-4 rounded m-10"
+        on:click={moveToNextAssignment}
+      >
+        Move to next assignment
+      </button>
     {:else}
       <p class="text-red-500">Your submission is incorrect. Feedback: {gradingResult.feedback.explanation}</p>
       <div>

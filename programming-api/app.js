@@ -45,6 +45,13 @@ const handleGetAssignments = async ( request ) => {
   return Response.json(await cachedProgrammingAssignmentService.findAll());
 };
 
+const handleGetSolvedAssignments = async (request) => {
+  const searchParams = new URL(request.url).searchParams;
+  const solvedAssignments = await programmingAssignmentService.findSolvedAssignments(searchParams.get("user"))
+  console.log(solvedAssignments);
+  return Response.json(solvedAssignments);
+};
+
 const handlePostAssignment = async ( request ) => {
   const programmingAssignments = await cachedProgrammingAssignmentService.findAll();
   const requestData = await request.json();
@@ -177,6 +184,11 @@ const urlMapping = [
     fn: handleGetAssignments,
   },
   {
+    pattern: new URLPattern({ pathname: "/done-assignments" }),
+    method: "GET",
+    fn: handleGetSolvedAssignments,
+  },
+  {
     pattern: new URLPattern({ pathname: "/grade" }),
     method: "POST",
     fn: handlePostAssignment,
@@ -211,6 +223,7 @@ const handleRequest = async (request) => {
   try {
     return await mapping.fn(request, mappingResult);
   } catch (e) {
+    console.error(e);
     return new Response(e.stack, { status: 500 })
   }
 };
