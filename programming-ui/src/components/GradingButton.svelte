@@ -8,6 +8,7 @@
   let pending = false;
 
   const updateAssignments = getContext("updateAssignments");
+  const updateSolved = getContext("updateSolved");
 
   const submitToGrading = async () => {
     pending = true;
@@ -60,6 +61,7 @@
 
     pending = false;
     submissionId = null;
+    updateSolved();
   };
 
   const moveToNextAssignment = async () => {

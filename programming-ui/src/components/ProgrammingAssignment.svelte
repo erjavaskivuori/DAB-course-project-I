@@ -47,6 +47,10 @@
     }
   };
 
+  const fetchSolved = async () => {
+    solvedAssignments = await getSolvedAssignments();
+  };
+
   const fetchData = async () => {
     editorValue = "";
     assignments = await getAssignments();
@@ -60,6 +64,7 @@
   });
 
   setContext("updateAssignments", fetchData);
+  setContext("updateSolved", fetchSolved);
 </script>
 
 <div class="flex w-full h-full flex-col items-center justify-center bg-gray-900 text-white">
