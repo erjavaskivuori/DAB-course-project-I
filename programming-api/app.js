@@ -74,9 +74,7 @@ const handlePostAssignment = async ( request ) => {
         feedback: JSON.parse(previousSubmissions[i].grader_feedback),
         status: previousSubmissions[i].status,
       };
-      return new Response(JSON.stringify(feedbackData), {
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(JSON.stringify(feedbackData));
     };
   };
 
@@ -124,23 +122,18 @@ const handlePostSubmissionPending = async (request) => {
       for (const message of submissionStream.messages) {
         if (message.fieldValues.user === user) {
           const id = message.fieldValues.id;
-          return new Response(JSON.stringify({ pending: true, id: id }), {
-            headers: { "Content-Type": "application/json" },
-          });
+          return new Response(JSON.stringify({ pending: true, id: id }));
         }
       }
 
       lastId = submissionStream.messages[submissionStream.messages.length - 1].xid;
     }
 
-    return new Response(JSON.stringify({ pending: false }), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({ pending: false }));
   } catch (e) {
     console.error("Error checking user in stream:", e);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
     });
   }
 };
@@ -173,14 +166,11 @@ const handleGetSubmission = async (request) => {
       feedback: JSON.parse(submission[0].grader_feedback),
       correct: submission[0].correct,
     };
-    return new Response(JSON.stringify(data), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify(data));
   } catch (e) {
     console.error("Error fetching submission:", e);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
     });
   }
 };
