@@ -27,7 +27,7 @@ const findBySubmissionId = async (submissionId) => {
 
 const findSolvedAssignments = async (userId) => {
   return await sql`
-    SELECT programming_assignment_id
+    SELECT DISTINCT programming_assignment_id
     FROM programming_assignment_submissions
     WHERE user_uuid = ${userId} AND correct = true;
   `;
