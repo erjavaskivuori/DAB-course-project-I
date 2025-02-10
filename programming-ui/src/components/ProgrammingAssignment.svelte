@@ -7,8 +7,8 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import GradingButton from "./GradingButton.svelte";
-  import CodeEditor from "./CodeEditor.svelte"
-  import ProgressBar from "./ProgressBar.svelte"
+  import CodeEditor from "./CodeEditor.svelte";
+  import ProgressBar from "./ProgressBar.svelte";
   import { userUuid } from "../stores/stores.js";
 
   let editorValue = "";
@@ -26,12 +26,12 @@
   const getSolvedAssignments = async () => {
     const user = get(userUuid);
     const response = await fetch("/api/done-assignments", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ user: user }),
-        });
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user: user }),
+    });
     return await response.json();
   };
 
@@ -59,8 +59,15 @@
 
   const fetchData = async () => {
     editorValue = "";
-    assignments = await getAssignments();
-    solvedAssignments = await getSolvedAssignments();
+    loading = true;
+
+    const [assignmentsResponse, solvedAssignmentsResponse] = await Promise.all([
+      getAssignments(),
+      getSolvedAssignments()
+    ]);
+
+    assignments = assignmentsResponse;
+    solvedAssignments = solvedAssignmentsResponse;
     determineNextUnsolvedAssignment();
     loading = false;
   };
