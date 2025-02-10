@@ -45,16 +45,34 @@ const handleGetAssignments = async ( request ) => {
   return Response.json(await cachedProgrammingAssignmentService.findAll());
 };
 
-const handleGetSolvedAssignments = async (request) => {
-  const searchParams = new URL(request.url).searchParams;
-  const solvedAssignments = await programmingAssignmentService.findSolvedAssignments(searchParams.get("user"))
+const handlePostSolvedAssignments = async (request) => {
+  const searchParams = await request.json();
+  const solvedAssignments = await programmingAssignmentService.findSolvedAssignments(searchParams.user);
   return Response.json(solvedAssignments);
 };
 
 const handlePostAssignment = async ( request ) => {
-  const programmingAssignments = await cachedProgrammingAssignmentService.findAll();
   const requestData = await request.json();
+
+  const previousSubmissions = await programmingAssignmentService.findByUserIdAndassignmentId(
+    requestData.user,
+    requestData.assignment
+  );
+
+  for (let i = 0; i < previousSubmissions.length; i++) {
+    if (previousSubmissions[i].code === requestData.code) {
+      const feedbackData = {
+        correct: previousSubmissions[i].correct,
+        feedback: JSON.parse(previousSubmissions[i].grader_feedback),
+        status: previousSubmissions[i].status,
+      };
+      return Response.json(feedbackData);
+    };
+  };
+
+  const programmingAssignments = await cachedProgrammingAssignmentService.findAll();
   const testCode = programmingAssignments[requestData.assignment-1]["test_code"];
+
   const data = {
     userId: requestData.user,
     assignmentId: requestData.assignment,
@@ -62,23 +80,7 @@ const handlePostAssignment = async ( request ) => {
     code: requestData.code,
   };
 
-  const previousSubmissions = await programmingAssignmentService.findByUserIdAndassignmentId(
-    data.userId,
-    data.assignmentId
-  );
-
-  for (let i = 0; i < previousSubmissions.length; i++) {
-    if (previousSubmissions[i].code === data.code) {
-      const feedbackData = {
-        correct: previousSubmissions[i].correct,
-        feedback: JSON.parse(previousSubmissions[i].grader_feedback),
-        status: previousSubmissions[i].status,
-      };
-      return new Response(JSON.stringify(feedbackData));
-    };
-  };
-
-  const submission = await programmingAssignmentService.addSubmission(
+  const submission = await cachedProgrammingAssignmentService.addSubmission(
     data.assignmentId,
     data.code,
     data.userId
@@ -144,7 +146,7 @@ const handlePostSubmissionUpdate = async (request) => {
   try {
     const feedbackJson = JSON.stringify(parsedOutput.feedback);
 
-    await programmingAssignmentService.updateSubmission(
+    await cachedProgrammingAssignmentService.updateSubmission(
       gradedSubmission.id,
       "processed",
       feedbackJson,
@@ -188,8 +190,8 @@ const urlMapping = [
   },
   {
     pattern: new URLPattern({ pathname: "/done-assignments" }),
-    method: "GET",
-    fn: handleGetSolvedAssignments,
+    method: "POST",
+    fn: handlePostSolvedAssignments,
   },
   {
     pattern: new URLPattern({ pathname: "/grade" }),
