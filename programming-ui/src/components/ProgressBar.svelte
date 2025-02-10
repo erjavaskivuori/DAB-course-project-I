@@ -15,7 +15,7 @@
 </script>
 
 <div class="my-8 max-w-screen">
-  <h1 class="my-7 text-xl font-bold">
+  <h1 class="my-7 text-xl font-bold" id="progress">
     Your progress: {points} / {maxPoints} points
   </h1>
   <div class="bg-gray-200 rounded-full h-4 dark:bg-gray-700">

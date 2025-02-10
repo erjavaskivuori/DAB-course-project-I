@@ -77,7 +77,9 @@
       {:else}
         {#if nextAssignment}
           <ul>
-            <h1 class="text-3xl font-bold my-4">Assignment {nextAssignment.assignment_order}: {nextAssignment.title}</h1>
+            <h1 class="text-3xl font-bold my-4" id="assignment_{nextAssignment.assignment_order}">
+              Assignment {nextAssignment.assignment_order}: {nextAssignment.title}
+            </h1>
             <p class="text-lg mb-8">{nextAssignment.handout}</p>
             <CodeEditor bind:lineNumbers bind:editorValue />
             <GradingButton {editorValue} {nextAssignment} />
