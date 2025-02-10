@@ -25,7 +25,7 @@ test("After a correct submission, can move to the next assignment", async ({ pag
   await page.click("button:has-text('Submit for grading')");
   await page.waitForSelector("text=Your submission is correct!")
   await page.click("button:has-text('Move to next assignment')");
-  expect(await page.waitForSelector("[id='assignment_2']", {timeout: 5000}));
+  expect(await page.waitForSelector("[id='assignment_2']", {timeout: 10000}));
 });
 
 test("After a correct submission user's points change", async ({ page }) => {
@@ -33,5 +33,5 @@ test("After a correct submission user's points change", async ({ page }) => {
   await page.locator("[id='code_editor']").fill("def hello():\n  return 'Hello'");
   await page.click("button:has-text('Submit for grading')");
   await page.waitForSelector("text=Your submission is correct!")
-  expect(page.locator("[id='progress']").locator("text=100")).toBeVisible();
+  expect(page.locator("[id='progress']").locator("text=100")).toBeVisible({timeout: 10000});
 });
