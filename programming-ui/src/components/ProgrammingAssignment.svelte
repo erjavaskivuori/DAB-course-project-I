@@ -25,7 +25,13 @@
 
   const getSolvedAssignments = async () => {
     const user = get(userUuid);
-    const response = await fetch("/api/done-assignments?user=" + user);
+    const response = await fetch("/api/done-assignments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user: user }),
+        });
     return await response.json();
   };
 
