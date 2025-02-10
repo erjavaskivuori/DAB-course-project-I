@@ -47,7 +47,7 @@
 
     if (gradingResult.status === "pending") {
       do {
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 300));
         const submissionResponse = await fetch("/api/submission", {
           method: "POST",
           headers: {
